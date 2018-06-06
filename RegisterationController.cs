@@ -11,6 +11,7 @@ namespace WebApplication1.Controllers
     [RoutePrefix("api/Registeration")]
     public class RegisterationController : ApiController
     {
+        /*
         [Route("register")]
         [HttpPost]
         public HttpResponseMessage Registeration(User user)
@@ -31,6 +32,27 @@ namespace WebApplication1.Controllers
 
                     insertCommand.Parameters.Add(new SqlParameter("1", user.Email));
                     insertCommand.Parameters.Add(new SqlParameter("2", user.Password));
+
+                    var message = Request.CreateResponse(HttpStatusCode.Created, user);
+                    message.Headers.Location = new Uri(Request.RequestUri + user.ID.ToString());
+                    return message;
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
+        }*/
+        [HttpPost]
+        [Route("register")]
+        public HttpResponseMessage InsertEmployee([FromBody] User user)
+        {
+            try
+            {
+                using (EmployeeDBEntities2 entities = new EmployeeDBEntities2())
+                {
+                    entities.Users.Add(user);
+                    entities.SaveChanges();
 
                     var message = Request.CreateResponse(HttpStatusCode.Created, user);
                     message.Headers.Location = new Uri(Request.RequestUri + user.ID.ToString());
